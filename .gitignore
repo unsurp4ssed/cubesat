@@ -35,6 +35,10 @@ Thumbs.db
 /.qmake.cache
 /.qmake.stash
 cmake-build-debug
+Makefile
+CMakeCache.txt
+cmake_install.cmake
+CMakeFiles
 
 # qtcreator generated files
 *.pro.user*
