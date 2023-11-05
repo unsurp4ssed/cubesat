@@ -2,6 +2,9 @@
 #include <algorithm>
 #include "bitmapRW.h"
 
+#define OUTPUT "img2.bmp"
+#define OUTPUT "img3.bmp"
+
 typedef enum borderType {
     NoBorder, Up, Dwn, Left, Right
 } borderSize;
