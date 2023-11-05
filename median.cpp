@@ -17,7 +17,9 @@ border_t checkBorder(long long int i, int width, int height) {
 
     long long int pxNo = i/3;
 
-    //keeping in mind that bmp is (usually) written from down-right corner to up-left corner
+    //keeping in mind that bmp is sometimes written from down-right corner to up-left corner
+    //in that case L swaps with R amd U swaps with D, obviously
+    //TODO auto-detect how pixel data is written (UL to DR or DR to UL)
     if (pxNo % width == 0) widthBorder = Right;
     else if (pxNo-1 % width == 0) widthBorder = Left;
 
@@ -28,8 +30,8 @@ border_t checkBorder(long long int i, int width, int height) {
 }
 
 int main() {
-    byte *pixels;
-    byte *pixels_filtered;
+    byte *pixels; //array for data to be read from image
+    byte *pixels_filtered; //array for data to be written to
     int32_t width;
     int32_t height;
     uint32_t bytesPerPixel;
@@ -40,18 +42,19 @@ int main() {
 
     ReadImage("../data/img2.bmp", &pixels, &width, &height, &bytesPerPixel);
 
-
     pixels_filtered = (byte*) malloc(width * height *bytesPerPixel);
 
     for (int64_t i = 0; i < width * height * bytesPerPixel; i+=bytesPerPixel) {
-        int chunk[9];
+        int chunk[9]; //chunk of pixels surrounding A0
+//        [][  ][]
+//        [][A0][]
+//        [][  ][]
         border_t border = checkBorder(i, width, height);
-
         //central pixel
         chunk[0] = pixels[i];
         //on the L and R sides
-        chunk[1] = pixels[i - bytesPerPixel] * (border.widthBorder != Left);
-        chunk[2] = pixels[i + bytesPerPixel] * (border.widthBorder != Right);
+        chunk[1] = (border.widthBorder != Left) ? pixels[i - bytesPerPixel] : 0;
+        chunk[2] = (border.widthBorder != Right) ? pixels[i + bytesPerPixel] : 0;
         //on the U and D sides
         chunk[3] = (border.heightBorder != Dwn) ? pixels[i + bytesPerPixel * width] : 0;
         chunk[4] = (border.heightBorder != Up) ? pixels[i - bytesPerPixel * width] : 0;
@@ -62,9 +65,9 @@ int main() {
         chunk[7] = ((border.heightBorder != Dwn) && (border.widthBorder != Right)) ? pixels[i + bytesPerPixel * width + bytesPerPixel] : 0;
         chunk[8] = ((border.heightBorder != Dwn) && (border.widthBorder != Left)) ? pixels[i + bytesPerPixel * width - bytesPerPixel] : 0;
 
+        std::sort(chunk, chunk + 9); //std::sort gets 2 address of the piece of memory to be sorted - beginning and the end.
 
-        std::sort(chunk, chunk + 9);
-
+        //after sorting, the median value gonna end up in the 5th place in the array
         pixels_filtered[i] = chunk[5];
         pixels_filtered[i+1] = chunk[5];
         pixels_filtered[i+2] = chunk[5];
