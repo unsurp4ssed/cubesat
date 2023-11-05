@@ -2,8 +2,8 @@
 #include <algorithm>
 #include "bitmapRW.h"
 
-#define OUTPUT "img2.bmp"
-#define OUTPUT "img3.bmp"
+#define INPUT "../data/img2.bmp"
+#define OUTPUT "../data/img2.bmp"
 
 typedef enum borderType {
     NoBorder, Up, Dwn, Left, Right
@@ -43,7 +43,7 @@ int main() {
 
     start = clock();
 
-    ReadImage("../data/img2.bmp", &pixels, &width, &height, &bytesPerPixel);
+    ReadImage(INPUT, &pixels, &width, &height, &bytesPerPixel);
 
     pixels_filtered = (byte*) malloc(width * height *bytesPerPixel);
 
@@ -76,7 +76,7 @@ int main() {
         pixels_filtered[i+2] = chunk[5];
     }
 
-    WriteImage("../data/img3.bmp", pixels_filtered, width, height, bytesPerPixel);
+    WriteImage(OUTPUT, pixels_filtered, width, height, bytesPerPixel);
 
     end = clock();
     double runtime = double(end - start) / double(CLOCKS_PER_SEC);

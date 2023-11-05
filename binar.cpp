@@ -2,8 +2,8 @@
 #include <iostream>
 
 #define MIN_BRIGHTNESS 50
-#define INPUT "otsu_test.bmp"
-#define OUTPUT "img2.bmp"
+#define INPUT "../data/test_otsu.bmp"
+#define OUTPUT "../data/img2.bmp"
 
 //TODO rewrite otsu properly
 
@@ -101,7 +101,7 @@ int main() {
 
     start = clock();
 
-    ReadImage("../data/test_otsu.bmp", &pixels, &width, &height, &bytesPerPixel);
+    ReadImage(INPUT, &pixels, &width, &height, &bytesPerPixel);
 
     byte threshold = otsuThreshold(pixels, width*height);
     printf("%d\n", threshold);
@@ -127,7 +127,7 @@ int main() {
         }
     }
 
-    WriteImage("../data/img2.bmp", pixels, width, height, bytesPerPixel);
+    WriteImage(OUTPUT, pixels, width, height, bytesPerPixel);
 
     end = clock();
     double runtime = double(end - start) / double(CLOCKS_PER_SEC);
