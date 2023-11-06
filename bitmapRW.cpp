@@ -8,7 +8,7 @@ void ReadImage(const char *fileName, byte **pixels, int32_t *width, int32_t *hei
 {
     //HEADER READING
     FILE *imageFile = fopen(fileName, "rb");
-    uint32_t dataOffset;
+    signed long dataOffset;
 
     fseek(imageFile, DATA_OFFSET_OFFSET, SEEK_SET);
     fread(&dataOffset, 4, 1, imageFile);
@@ -27,12 +27,12 @@ void ReadImage(const char *fileName, byte **pixels, int32_t *width, int32_t *hei
     *bytesPerPixel = ((uint32_t)bitsPerPixel) / 8;
 
     //reading pixel data
-    int unpaddedRowSize = (*width)*(*bytesPerPixel);
-    int paddedRowSize = unpaddedRowSize;
+    uint32_t unpaddedRowSize = (*width)*(*bytesPerPixel);
+    uint32_t paddedRowSize = unpaddedRowSize;
     while (paddedRowSize % 4 != 0) {
         paddedRowSize++;
     }
-    int totalSize = unpaddedRowSize*(*height);
+    uint32_t totalSize = unpaddedRowSize*(*height);
     *pixels = (byte*)malloc(totalSize);
     byte *currentRowPointer = *pixels+((*height-1)*unpaddedRowSize);
     for (int i = 0; i < *height; i++) //going from height value down to 0 bc libcamera writes from lower left corner instead og higher left
@@ -52,7 +52,7 @@ void WriteImage(const char *fileName, byte *pixels, uint32_t width, uint32_t hei
     fwrite(&BM[0], 1, 1, outputFile);
     fwrite(&BM[1], 1, 1, outputFile);
 
-    int unpaddedRowSize = width*bytesPerPixel;
+    uint32_t unpaddedRowSize = width*bytesPerPixel;
     int paddedRowSize = unpaddedRowSize;
     while (paddedRowSize % 4 != 0) {
         paddedRowSize++;
@@ -95,7 +95,7 @@ void WriteImage(const char *fileName, byte *pixels, uint32_t width, uint32_t hei
     uint32_t importantColors = ALL_COLORS_REQUIRED;
     fwrite(&importantColors, 4, 1, outputFile);
 
-    for (int i = 0; i < height; i++)
+    for (uint32_t i = 0; i < height; i++)
     {
         int pixelOffset = ((height - i) - 1)*unpaddedRowSize;
         fwrite(&pixels[pixelOffset], 1, paddedRowSize, outputFile);
