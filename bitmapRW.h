@@ -31,4 +31,3 @@ void ReadImage(const char *fileName, byte **pixels, int32_t *width, int32_t *hei
 void WriteImage(const char *fileName, byte *pixels, uint32_t width, uint32_t height, uint32_t bytesPerPixel);
 
 #endif
-

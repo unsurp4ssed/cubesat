@@ -3,7 +3,7 @@
 #include "bitmapRW.h"
 
 #define INPUT "../data/img2.bmp"
-#define OUTPUT "../data/img2.bmp"
+#define OUTPUT "../data/img3.bmp"
 
 typedef enum borderType {
     NoBorder, Up, Dwn, Left, Right

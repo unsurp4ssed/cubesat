@@ -5,3 +5,4 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(binar binar.cpp bitmapRW.cpp bitmapRW.h)
 add_executable(median median.cpp bitmapRW.cpp bitmapRW.h)
+add_executable(close_open close-open.cpp bitmapRW.cpp bitmapRW.h)

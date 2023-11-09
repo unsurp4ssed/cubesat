@@ -2,7 +2,7 @@
 #include <iostream>
 
 #define MIN_BRIGHTNESS 50
-#define INPUT "../data/test_otsu.bmp"
+#define INPUT "../data/stars.bmp"
 #define OUTPUT "../data/img2.bmp"
 
 //TODO rewrite otsu properly
@@ -113,8 +113,8 @@ int main() {
         r = pixels[i+2];
         double brightness = (0.2989*r+0.5870*g+0.1140*b);
         //int brightness = r+g+b;
-        //if (brightness < 330)
-        if (brightness < threshold)
+        if (brightness < 64)
+        //if (brightness < threshold)
         {
             pixels[i] = 0;
             pixels[i+1] = 0;
