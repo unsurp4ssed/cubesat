@@ -2,7 +2,7 @@
 // Created by admin on 15.10.2023.
 //
 
-#include "bitmapRW.h"
+#include "../include/bitmapRW.h"
 
 void ReadImage(const char *fileName, byte **pixels, int32_t *width, int32_t *height, uint32_t *bytesPerPixel)
 {

@@ -1,4 +1,4 @@
-#include "bitmapRW.h"
+#include "include/bitmapRW.h"
 #include <iostream>
 
 #define MIN_BRIGHTNESS 50
