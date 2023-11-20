@@ -3,11 +3,12 @@
 #include "bitmapRW.h"
 #include "border_checker.h"
 
+
 #define INPUT "../data/img3.bmp"
 #define OUTPUT "../data/img20.bmp"
 
 
-int main()
+int main(int argc, char *argv[])
 {
     byte* pixels; //array for data to be read from image
     byte* pixels_filtered; //array for data to be written to
@@ -16,11 +17,14 @@ int main()
     int32_t height;
     uint32_t bytesPerPixel;
 
+    char* input = argv[1];
+    char* output = argv[2];
+
     clock_t start, end;
 
     start = clock();
 
-    ReadImage(INPUT, &pixels, &width, &height, &bytesPerPixel);
+    ReadImage(input, &pixels, &width, &height, &bytesPerPixel);
 
     pixels_filtered = (byte*)malloc(width * height * bytesPerPixel);
     pixels_prefiltered = (byte*)malloc(width * height * bytesPerPixel);
@@ -126,7 +130,7 @@ int main()
         }
     }
 
-    WriteImage(OUTPUT, pixels_filtered, width, height, bytesPerPixel);
+    WriteImage(output, pixels_filtered, width, height, bytesPerPixel);
 
 
 
@@ -134,6 +138,6 @@ int main()
     double runtime = double(end - start) / double(CLOCKS_PER_SEC);
 
 
-    printf("%f s\n", runtime);
+    printf("%f\n", runtime);
     free(pixels);
 }

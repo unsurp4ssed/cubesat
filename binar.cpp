@@ -91,7 +91,7 @@ int otsuThreshold(byte *pixels, int size)
 }
 
 
-int main() {
+int main(int argc, char *argv[]) {
     byte *pixels;
     int32_t width;
     int32_t height;
@@ -101,10 +101,13 @@ int main() {
 
     start = clock();
 
-    ReadImage(INPUT, &pixels, &width, &height, &bytesPerPixel);
+    char* input = argv[1];
+    char* output = argv[2];
+
+    ReadImage(input, &pixels, &width, &height, &bytesPerPixel);
 
     byte threshold = otsuThreshold(pixels, width*height);
-    printf("%d\n", threshold);
+    //printf("%d\n", threshold);
 
     for (int64_t i = 0; i < width*height*bytesPerPixel; i+=bytesPerPixel) {
         byte r, g, b;
@@ -127,11 +130,11 @@ int main() {
         }
     }
 
-    WriteImage(OUTPUT, pixels, width, height, bytesPerPixel);
+    WriteImage(output, pixels, width, height, bytesPerPixel);
 
     end = clock();
     double runtime = double(end - start) / double(CLOCKS_PER_SEC);
 
-    printf("%fs\n", runtime);
+    printf("%f\n", runtime);
     free(pixels);
 }
