@@ -3,10 +3,8 @@
 #include "bitmapRW.h"
 #include "border_checker.h"
 
-
 #define INPUT "../data/img3.bmp"
 #define OUTPUT "../data/img20.bmp"
-
 
 int main(int argc, char *argv[])
 {
@@ -132,11 +130,8 @@ int main(int argc, char *argv[])
 
     WriteImage(output, pixels_filtered, width, height, bytesPerPixel);
 
-
-
     end = clock();
     double runtime = double(end - start) / double(CLOCKS_PER_SEC);
-
 
     printf("%f\n", runtime);
     free(pixels);

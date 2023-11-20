@@ -62,5 +62,3 @@ int main(int argc, char* argv[]) {
     printf("%f\n", runtime);
     free(pixels);
 }
-
-

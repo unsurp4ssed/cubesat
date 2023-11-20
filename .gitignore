@@ -40,6 +40,8 @@ CMakeCache.txt
 cmake_install.cmake
 CMakeFiles
 
+venv
+
 # qtcreator generated files
 *.pro.user*
 
