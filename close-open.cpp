@@ -1,44 +1,17 @@
 #include <iostream>
 #include <algorithm>
 #include "bitmapRW.h"
+#include "border_checker.h"
 
 #define INPUT "../data/img3.bmp"
-#define OUTPUT "../data/img4.bmp"
-
-
-typedef enum borderType {
-    NoBorder, Up, Dwn, Left, Right
-} borderSize;
-
-typedef struct border {
-    borderSize widthBorder;
-    borderSize heightBorder;
-} border_t;
-
-border_t checkBorder(long long int i, int width, int height) {
-    borderSize widthBorder = NoBorder;
-    borderSize heightBorder = NoBorder;
-
-    long long int pxNo = i / 3;
-
-    //keeping in mind that bmp is sometimes written from down-right corner to up-left corner
-    //in that case L swaps with R amd U swaps with D, obviously
-    //TODO auto-detect how pixel data is written (UL to DR or DR to UL)
-    if (pxNo % width == 0) widthBorder = Right;
-    else if (pxNo - 1 % width == 0) widthBorder = Left;
-
-    if (pxNo <= width) heightBorder = Up;
-    else if ((pxNo <= width * height) && (pxNo >= width * (height - 1))) heightBorder = Dwn;
-
-    return { widthBorder, heightBorder };
-}
+#define OUTPUT "../data/img20.bmp"
 
 
 int main()
 {
     byte* pixels; //array for data to be read from image
-//    byte* pixels_filtered; //array for data to be written to
-//    byte* pixels_prefiltered;
+    byte* pixels_filtered; //array for data to be written to
+    byte* pixels_prefiltered;
     int32_t width;
     int32_t height;
     uint32_t bytesPerPixel;
@@ -49,14 +22,14 @@ int main()
 
     ReadImage(INPUT, &pixels, &width, &height, &bytesPerPixel);
 
-    byte* pixels_filtered = (byte*)malloc(width * height * bytesPerPixel);
-    byte* pixels_prefiltered = (byte*)malloc(width * height * bytesPerPixel);
+    pixels_filtered = (byte*)malloc(width * height * bytesPerPixel);
+    pixels_prefiltered = (byte*)malloc(width * height * bytesPerPixel);
 
     for (int64_t i = 0; i < width * height * bytesPerPixel; i += bytesPerPixel)
     {
         pixels_filtered[i] = 0;
-        pixels_filtered[i+1] = 0;
-        pixels_filtered[i+2] = 0;
+        pixels_filtered[i + 1] = 0;
+        pixels_filtered[i + 2] = 0;
     }
 
     for (int64_t i = 0; i < width * height * bytesPerPixel; i += bytesPerPixel)
@@ -66,21 +39,41 @@ int main()
         pixels_prefiltered[i + 2] = 0xff;
     }
 
-
     for (int64_t i = 0; i < width * height * bytesPerPixel; i += bytesPerPixel) {
-        int chunk[8];
+        int chunk[24];
         border_t border = checkBorder(i, width, height);
+        //LR
         chunk[0] = (border.widthBorder != Left) ? pixels[i - bytesPerPixel] : 0;
-        chunk[1] = (border.widthBorder != Right) ? pixels[i + bytesPerPixel] : 0;
-        chunk[2] = (border.heightBorder != Dwn) ? pixels[i + bytesPerPixel * width] : 0;
-        chunk[3] = (border.heightBorder != Up) ? pixels[i - bytesPerPixel * width] : 0;
-        chunk[4] = ((border.heightBorder != Up) && (border.widthBorder != Right)) ? pixels[i - bytesPerPixel * width + bytesPerPixel] : 0;
-        chunk[5] = ((border.heightBorder != Up) && (border.widthBorder != Left)) ? pixels[i - bytesPerPixel * width - bytesPerPixel] : 0;
-        chunk[6] = ((border.heightBorder != Dwn) && (border.widthBorder != Right)) ? pixels[i + bytesPerPixel * width + bytesPerPixel] : 0;
-        chunk[7] = ((border.heightBorder != Dwn) && (border.widthBorder != Left)) ? pixels[i + bytesPerPixel * width - bytesPerPixel] : 0;
-        int64_t k = 0;
+        chunk[1] = (border.widthBorder != Left2) ? pixels[i - 2*bytesPerPixel] : 0;
+        chunk[2] = (border.widthBorder != Right) ? pixels[i + bytesPerPixel] : 0;
+        chunk[3] = (border.widthBorder != Right2) ? pixels[i + 2*bytesPerPixel] : 0;
+        //UD
+        chunk[4] = (border.heightBorder != Dwn) ? pixels[i + bytesPerPixel * width] : 0;
+        chunk[5] = (border.heightBorder != Up) ? pixels[i - bytesPerPixel * width] : 0;
+        chunk[6] = (border.heightBorder != Dwn2) && (border.heightBorder != Dwn) ? pixels[i+ 2 * bytesPerPixel * width] : 0;
+        chunk[7] = (border.heightBorder != Up2) && (border.heightBorder != Up) ? pixels[i - 2 * bytesPerPixel * width] : 0;
 
-        for (int64_t j = 0; j <= 7; j++)
+        chunk[8] = ((border.heightBorder != Up2) && (border.heightBorder != Up) && (border.widthBorder != Right2)) ? pixels[i - bytesPerPixel * width + bytesPerPixel] : 0;
+        chunk[9] = ((border.heightBorder != Up2) && (border.heightBorder != Up) && (border.widthBorder != Right2)) ? pixels[i - bytesPerPixel * 2*width + 2*bytesPerPixel] : 0;
+        chunk[10] = ((border.heightBorder != Up2) && (border.heightBorder != Up) && (border.widthBorder != Right2)) ? pixels[i - bytesPerPixel * 2 * width +  bytesPerPixel] : 0;
+        chunk[11] = ((border.heightBorder != Up2) && (border.heightBorder != Up) && (border.widthBorder != Right2)) ? pixels[i - bytesPerPixel * width + 2*bytesPerPixel] : 0;
+
+        chunk[12] = ((border.heightBorder != Up2) && (border.heightBorder != Up) && (border.widthBorder != Left2)) ? pixels[i - bytesPerPixel * width - bytesPerPixel] : 0;
+        chunk[13] = ((border.heightBorder != Up2) && (border.heightBorder != Up) && (border.widthBorder != Left2)) ? pixels[i - bytesPerPixel * width -2* bytesPerPixel] : 0;
+        chunk[14] = ((border.heightBorder != Up2) && (border.heightBorder != Up) && (border.widthBorder != Left2)) ? pixels[i - 2*bytesPerPixel * width - bytesPerPixel] : 0;
+        chunk[15] = ((border.heightBorder != Up2) && (border.heightBorder != Up) && (border.widthBorder != Left2)) ? pixels[i - 2*bytesPerPixel * width - 2*bytesPerPixel] : 0;
+
+        chunk[16] = ((border.heightBorder != Dwn2) && (border.heightBorder != Dwn) && (border.widthBorder != Right2)) ? pixels[i + bytesPerPixel * width + bytesPerPixel] : 0;
+        chunk[17] = ((border.heightBorder != Dwn2) && (border.heightBorder != Dwn) && (border.widthBorder != Right2)) ? pixels[i + bytesPerPixel * width + 2*bytesPerPixel] : 0;
+        chunk[18] = ((border.heightBorder != Dwn2) && (border.heightBorder != Dwn) && (border.widthBorder != Right2)) ? pixels[i + 2*bytesPerPixel * width + bytesPerPixel] : 0;
+        chunk[19] = ((border.heightBorder != Dwn2) && (border.heightBorder != Dwn) && (border.widthBorder != Right2)) ? pixels[i + 2*bytesPerPixel * width + 2*bytesPerPixel] : 0;
+
+        chunk[20] = ((border.heightBorder != Dwn2) && (border.heightBorder != Dwn) && (border.widthBorder != Left2)) ? pixels[i + bytesPerPixel * width - bytesPerPixel] : 0;
+        chunk[21] = ((border.heightBorder != Dwn2) && (border.heightBorder != Dwn) && (border.widthBorder != Left2)) ? pixels[i + bytesPerPixel * width - 2*bytesPerPixel] : 0;
+        chunk[22] = ((border.heightBorder != Dwn2) && (border.heightBorder != Dwn) && (border.widthBorder != Left2)) ? pixels[i + 2*bytesPerPixel * width - bytesPerPixel] : 0;
+        chunk[23] = ((border.heightBorder != Dwn2) && (border.heightBorder != Dwn) && (border.widthBorder != Left2)) ? pixels[i + 2*bytesPerPixel * width - 2*bytesPerPixel] : 0;
+
+        for (int64_t j = 0; j <= 23; j++)
         {
             if (chunk[j] == 0)
             {
@@ -100,24 +93,42 @@ int main()
                 pixels_filtered[j] = 0xff;
 
                 pixels_filtered[j - bytesPerPixel] = 0xff;
-
+                pixels_filtered[j - 2 * bytesPerPixel] = 0xff;
                 pixels_filtered[j + bytesPerPixel] = 0xff;
+                pixels_filtered[j + 2*bytesPerPixel] = 0xff;
+
 
                 pixels_filtered[j + bytesPerPixel * width] = 0xff;
-
                 pixels_filtered[j - bytesPerPixel * width] = 0xff;
+                pixels_filtered[j + 2*bytesPerPixel * width] = 0xff;
+                pixels_filtered[j - 2*bytesPerPixel * width] = 0xff;
 
                 pixels_filtered[j - bytesPerPixel * width + bytesPerPixel] = 0xff;
+                pixels_filtered[j - bytesPerPixel * width + 2*bytesPerPixel] = 0xff;
+                pixels_filtered[j - 2*bytesPerPixel * width + bytesPerPixel] = 0xff;
+                pixels_filtered[j - 2*bytesPerPixel * width + 2*bytesPerPixel] = 0xff;
 
                 pixels_filtered[j - bytesPerPixel * width - bytesPerPixel] = 0xff;
+                pixels_filtered[j - bytesPerPixel * width - 2*bytesPerPixel] = 0xff;
+                pixels_filtered[j - 2*bytesPerPixel * width - bytesPerPixel] = 0xff;
+                pixels_filtered[j - 2*bytesPerPixel * width - 2*bytesPerPixel] = 0xff;
 
                 pixels_filtered[j + bytesPerPixel * width + bytesPerPixel] = 0xff;
+                pixels_filtered[j + bytesPerPixel * width + 2*bytesPerPixel] = 0xff;
+                pixels_filtered[j + 2*bytesPerPixel * width + bytesPerPixel] = 0xff;
+                pixels_filtered[j + 2*bytesPerPixel * width + 2*bytesPerPixel] = 0xff;
 
                 pixels_filtered[j + bytesPerPixel * width - bytesPerPixel] = 0xff;
+                pixels_filtered[j + bytesPerPixel * width - 2*bytesPerPixel] = 0xff;
+                pixels_filtered[j + 2*bytesPerPixel * width - bytesPerPixel] = 0xff;
+                pixels_filtered[j + 2*bytesPerPixel * width - 2*bytesPerPixel] = 0xff;
             }
         }
     }
+
     WriteImage(OUTPUT, pixels_filtered, width, height, bytesPerPixel);
+
+
 
     end = clock();
     double runtime = double(end - start) / double(CLOCKS_PER_SEC);
