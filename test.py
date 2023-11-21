@@ -12,7 +12,7 @@ for n in range (0, 7):
     print("\rTesting images ("+str(n)+"/6) ", end='')
     avg = 0
     for i in range(0, NUM_OF_TESTS+1):
-        p = subprocess.run(["cmake-build-debug/binar", 'data/i'+str(n)+'.bmp', 'data/b'+str(n)+'.bmp'], capture_output=True, text=True)
+        p = subprocess.run(["binar", 'data/i'+str(n)+'.bmp', 'data/b'+str(n)+'.bmp'], capture_output=True, text=True)
         #print("Image "+str(n)+", binarisation runtime: ", p.stdout)
         avg += float(p.stdout)
     binarRuntimes += [avg/3]
@@ -23,7 +23,7 @@ for n in range (0, 7):
     print("\rTesting images ("+str(n)+"/6) ", end='')
     avg = 0
     for i in range(0, NUM_OF_TESTS+1):
-        p = subprocess.run(["cmake-build-debug/median", 'data/b'+str(n)+'.bmp', 'data/m'+str(n)+'.bmp'], capture_output=True, text=True)
+        p = subprocess.run(["median", 'data/b'+str(n)+'.bmp', 'data/m'+str(n)+'.bmp'], capture_output=True, text=True)
         #print("Image "+str(n)+",median filtering runtime: ", p.stdout)
         avg += float(p.stdout)
     medianRuntimes += [avg/3]
@@ -34,7 +34,7 @@ for n in range (0, 7):
     print("\rTesting images ("+str(n)+"/6) ", end='')
     avg = 0
     for i in range(0, NUM_OF_TESTS+1):
-        p = subprocess.run(["cmake-build-debug/median", 'data/m'+str(n)+'.bmp', 'data/cp'+str(n)+'.bmp'], capture_output=True, text=True)
+        p = subprocess.run(["close-open", 'data/m'+str(n)+'.bmp', 'data/cp'+str(n)+'.bmp'], capture_output=True, text=True)
         #print("Image "+str(n)+", close-open filtering runtime: ", p.stdout)
         avg += float(p.stdout)
     closeOpenRuntimes += [avg/3]
