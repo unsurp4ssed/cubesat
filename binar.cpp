@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
         double brightness = (0.2989*r+0.5870*g+0.1140*b);
         //int brightness = r+g+b;
         //if (brightness < 64)
-        if (brightness < threshold)
+        if (brightness < threshold*3)
         {
             pixels[i] = 0;
             pixels[i+1] = 0;
