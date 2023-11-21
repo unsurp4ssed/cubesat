@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
         chunk[7] = ((border.heightBorder != Dwn) && (border.widthBorder != Right)) ? pixels[i + bytesPerPixel * width + bytesPerPixel] : 0;
         chunk[8] = ((border.heightBorder != Dwn) && (border.widthBorder != Left)) ? pixels[i + bytesPerPixel * width - bytesPerPixel] : 0;
 
-        std::sort(chunk, chunk + 9); //std::sort gets 2 address of the piece of memory to be sorted - beginning and the end.
+        std::sort(chunk, chunk + 9); //std::sort gets 2 addresses of the piece of memory to be sorted - beginning and the end.
 
         //after sorting, the median value gonna end up in the 5th place in the array
         pixels_filtered[i] = chunk[5];
