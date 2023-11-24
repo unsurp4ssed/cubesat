@@ -3,12 +3,13 @@
 //
 
 #include "../include/bitmapRW.h"
+#include <inttypes.h>
 
 void ReadImage(const char *fileName, byte **pixels, int32_t *width, int32_t *height, uint32_t *bytesPerPixel)
 {
     //HEADER READING
     FILE *imageFile = fopen(fileName, "rb");
-    signed long dataOffset;
+    long dataOffset;
 
     fseek(imageFile, DATA_OFFSET_OFFSET, SEEK_SET);
     fread(&dataOffset, 4, 1, imageFile);
@@ -21,10 +22,10 @@ void ReadImage(const char *fileName, byte **pixels, int32_t *width, int32_t *hei
     fread(height, 4, 1, imageFile);
     *height = abs(*height);
 
-    uint16_t bitsPerPixel;
+    uint32_t bitsPerPixel;
     fseek(imageFile, BITS_PER_PIXEL_OFFSET, SEEK_SET);
     fread(&bitsPerPixel, 2, 1, imageFile);
-    *bytesPerPixel = ((uint32_t)bitsPerPixel) / 8;
+    *bytesPerPixel = (bitsPerPixel) / 8;
 
     //reading pixel data
     uint32_t unpaddedRowSize = (*width)*(*bytesPerPixel);
@@ -53,7 +54,7 @@ void WriteImage(const char *fileName, byte *pixels, uint32_t width, uint32_t hei
     fwrite(&BM[1], 1, 1, outputFile);
 
     uint32_t unpaddedRowSize = width*bytesPerPixel;
-    int paddedRowSize = unpaddedRowSize;
+    uint32_t paddedRowSize = unpaddedRowSize;
     while (paddedRowSize % 4 != 0) {
         paddedRowSize++;
     }
@@ -97,7 +98,7 @@ void WriteImage(const char *fileName, byte *pixels, uint32_t width, uint32_t hei
 
     for (uint32_t i = 0; i < height; i++)
     {
-        int pixelOffset = ((height - i) - 1)*unpaddedRowSize;
+        uint32_t pixelOffset = ((height - i) - 1)*unpaddedRowSize;
         fwrite(&pixels[pixelOffset], 1, paddedRowSize, outputFile);
     }
     fclose(outputFile);
