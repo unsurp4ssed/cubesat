@@ -22,7 +22,7 @@ void ReadImage(const char *fileName, byte **pixels, int32_t *width, int32_t *hei
     fread(height, 4, 1, imageFile);
     *height = abs(*height);
 
-    uint32_t bitsPerPixel;
+    uint16_t bitsPerPixel;
     fseek(imageFile, BITS_PER_PIXEL_OFFSET, SEEK_SET);
     fread(&bitsPerPixel, 2, 1, imageFile);
     *bytesPerPixel = (bitsPerPixel) / 8;
