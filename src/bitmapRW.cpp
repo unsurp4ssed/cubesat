@@ -3,7 +3,7 @@
 //
 
 #include "../include/bitmapRW.h"
-#include <inttypes.h>
+#include <cinttypes>
 
 void ReadImage(const char *fileName, byte **pixels, int32_t *width, int32_t *height, uint32_t *bytesPerPixel)
 {
@@ -90,7 +90,6 @@ void WriteImage(const char *fileName, byte *pixels, uint32_t width, uint32_t hei
     uint32_t resolutionY = 11811; //300 dpi
     fwrite(&resolutionX, 4, 1, outputFile);
     fwrite(&resolutionY, 4, 1, outputFile);
-
     uint32_t colorsUsed = MAX_NUMBER_OF_COLORS;
     fwrite(&colorsUsed, 4, 1, outputFile);
     uint32_t importantColors = ALL_COLORS_REQUIRED;
