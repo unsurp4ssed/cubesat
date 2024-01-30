@@ -9,8 +9,8 @@
 int main(int argc, char* argv[]) {
     byte *pixels; //array for data to be read from image
     byte *pixels_filtered; //array for data to be written to
-    int32_t width;
-    int32_t height;
+    uint32_t width;
+    uint32_t height;
     uint32_t bytesPerPixel;
 
     char* input = argv[1];

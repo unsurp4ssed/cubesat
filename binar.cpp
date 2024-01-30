@@ -93,8 +93,8 @@ int otsuThreshold(byte *pixels, int size)
 
 int main(int argc, char *argv[]) {
     byte *pixels;
-    int32_t width;
-    int32_t height;
+    uint32_t width;
+    uint32_t height;
     uint32_t bytesPerPixel;
 
     clock_t start, end;
