@@ -6,10 +6,11 @@ binarRuntimes = []
 medianRuntimes = []
 closeOpenRuntimes = []
 NUM_OF_TESTS = 3
+NUM_OF_IMGS = 4
 
 print("================BINARISATION===================")
 for n in range (0, 4):
-    print("\rTesting images ("+str(n)+"/6) ", end='')
+    print("\rTesting images ("+str(n)+"/"+str(NUM_OF_IMGS)+") ", end='')
     avg = 0
     for i in range(0, NUM_OF_TESTS+1):
         p = subprocess.run(["./binar.exe", 'data/i'+str(n)+'.bmp', 'data/b'+str(n)+'.bmp'], capture_output=True, text=True)
@@ -20,7 +21,7 @@ print('...done.')
 
 print("==============MEDIAN FILTERING=================")
 for n in range (0, 4):
-    print("\rTesting images ("+str(n)+"/6) ", end='')
+    print("\rTesting images ("+str(n)+"/"+str(NUM_OF_IMGS)+") ", end='')
     avg = 0
     for i in range(0, NUM_OF_TESTS+1):
         p = subprocess.run(["./median.exe", 'data/b'+str(n)+'.bmp', 'data/m'+str(n)+'.bmp'], capture_output=True, text=True)
@@ -31,7 +32,7 @@ print('...done.')
 
 print("================CLOSE/OPEN=====================")
 for n in range (0, 4):
-    print("\rTesting images ("+str(n)+"/6) ", end='')
+    print("\rTesting images ("+str(n)+"/"+str(NUM_OF_IMGS)+") ", end='')
     avg = 0
     for i in range(0, NUM_OF_TESTS+1):
         p = subprocess.run(["./close-open.exe", 'data/m'+str(n)+'.bmp', 'data/cp'+str(n)+'.bmp'], capture_output=True, text=True)
