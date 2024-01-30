@@ -134,5 +134,24 @@ int main(int argc, char *argv[])
     double runtime = double(end - start) / double(CLOCKS_PER_SEC);
 
     printf("%f\n", runtime);
+
+    
+//Даня, это тебе
+    byte* pixel_data_bin;
+    pixel_data_bin = (byte*) malloc(width * height);
+    int64_t j = 0;
+    int64_t i = 0;
+    while (i < width*height*bytesPerPixel){
+        pixel_data_bin[j] = pixels_filtered[i] 
+        i+=bytesPerPixel;
+        j++;
+    }
+    //теперь в pixel_data_bin хранятся последовательно пиксели (из правого нижнего угла в левый верхний (sic!))
+    //его можно использовать дальше или записать в любой файл ("wb")
+    
+    free(pixel_data_bin);
+
+    free(pixels_filtered);
+    free(pixels_prefiltered);
     free(pixels);
 }
