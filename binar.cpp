@@ -8,18 +8,18 @@
 //TODO rewrite otsu properly
 
 // Определение порога методом Оцу
-int otsuThreshold(byte *pixels, int size)
+int otsuThreshold(byte *pixels_read, int size)
 {
     // Проверки на NULL и проч. опустим, чтобы сконцетрироваться
     // на работе метода
 
     // Посчитаем минимальную и максимальную яркость всех пикселей
-    int min = pixels[0];
-    int max = pixels[0];
+    int min = pixels_read[0];
+    int max = pixels_read[0];
 
     for (int i = 1; i < size; i+=3)
     {
-        int value = pixels[i];
+        int value = pixels_read[i];
 
         if (value < min)
             min = value;
@@ -39,7 +39,7 @@ int otsuThreshold(byte *pixels, int size)
 
     // И вычислим высоту бинов
     for (int i = 0; i < size; i+=3)
-        hist[pixels[i] - min]++;
+        hist[pixels_read[i] - min]++;
 
     // Введем два вспомогательных числа:
     int m = 0; // m - сумма высот всех бинов, домноженных на положение их середины
@@ -92,7 +92,8 @@ int otsuThreshold(byte *pixels, int size)
 
 
 int main(int argc, char *argv[]) {
-    byte *pixels;
+    byte *pixels_read;
+    byte *pixels_filtered;
     uint32_t width;
     uint32_t height;
     uint32_t bytesPerPixel;
@@ -104,37 +105,36 @@ int main(int argc, char *argv[]) {
     char* input = argv[1];
     char* output = argv[2];
 
-    ReadImage(input, &pixels, &width, &height, &bytesPerPixel);
+    ReadImage(input, &pixels_read, &width, &height, &bytesPerPixel);
 
-    byte threshold = otsuThreshold(pixels, width*height);
+    pixels_filtered = (byte*) malloc(width * height * 1);
+
+    byte threshold = otsuThreshold(pixels_read, width*height);
     //printf("%d\n", threshold);
 
     for (int64_t i = 0; i < width*height*bytesPerPixel; i+=bytesPerPixel) {
         byte r, g, b;
-        b = pixels[i];
-        g = pixels[i+1];
-        r = pixels[i+2];
+        b = pixels_read[i];
+        g = pixels_read[i+1];
+        r = pixels_read[i+2];
         double brightness = (0.2989*r+0.5870*g+0.1140*b);
         //int brightness = r+g+b;
         //if (brightness < 64)
         if (brightness < threshold*3)
         {
-            pixels[i] = 0;
-            pixels[i+1] = 0;
-            pixels[i+2] = 0;
+            pixels_filtered[i] = 0;
         }
         else {
-            pixels[i] = 0xff;
-            pixels[i+1] = 0xff;
-            pixels[i+2] = 0xff;
+            pixels_filtered[i] = 1;
+
         }
     }
 
-    WriteImage(output, pixels, width, height, bytesPerPixel);
+    WriteImage(output, pixels_read, width, height, 1);
 
     end = clock();
     double runtime = double(end - start) / double(CLOCKS_PER_SEC);
 
     printf("%f\n", runtime);
-    free(pixels);
+    free(pixels_read);
 }

@@ -33,6 +33,12 @@
 
 typedef uint8_t byte;
 
+typedef struct pixel {
+    byte r;
+    byte g;
+    byte b;
+} pixel_t;
+
 void ReadImage(const char *fileName, byte **pixels, uint32_t *width, uint32_t *height, uint32_t *bytesPerPixel);
 void WriteImage(const char *fileName, byte *pixels, uint32_t width, uint32_t height, uint32_t bytesPerPixel);
 
