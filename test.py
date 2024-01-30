@@ -8,7 +8,7 @@ closeOpenRuntimes = []
 NUM_OF_TESTS = 3
 
 print("================BINARISATION===================")
-for n in range (0, 7):
+for n in range (0, 4):
     print("\rTesting images ("+str(n)+"/6) ", end='')
     avg = 0
     for i in range(0, NUM_OF_TESTS+1):
@@ -19,7 +19,7 @@ for n in range (0, 7):
 print('...done.')
 
 print("==============MEDIAN FILTERING=================")
-for n in range (0, 7):
+for n in range (0, 4):
     print("\rTesting images ("+str(n)+"/6) ", end='')
     avg = 0
     for i in range(0, NUM_OF_TESTS+1):
@@ -30,7 +30,7 @@ for n in range (0, 7):
 print('...done.')
 
 print("================CLOSE/OPEN=====================")
-for n in range (0, 7):
+for n in range (0, 4):
     print("\rTesting images ("+str(n)+"/6) ", end='')
     avg = 0
     for i in range(0, NUM_OF_TESTS+1):
