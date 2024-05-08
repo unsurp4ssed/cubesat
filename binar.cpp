@@ -8,7 +8,7 @@
 //TODO rewrite otsu properly
 
 // Определение порога методом Оцу
-int otsuThreshold(byte *pixels, int size)
+int otsuThreshold(byte *pixels, uint32_t size)
 {
     // Проверки на NULL и проч. опустим, чтобы сконцетрироваться
     // на работе метода
@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
     byte threshold = otsuThreshold(pixels, width*height);
     //printf("%d\n", threshold);
 
-    for (int64_t i = 0; i < width*height*bytesPerPixel; i+=bytesPerPixel) {
+    for (int64_t i = 0; i < (uint64_t) width*height*bytesPerPixel; i+=bytesPerPixel) {
         byte r, g, b;
         b = pixels[i];
         g = pixels[i+1];
@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
         double brightness = (0.2989*r+0.5870*g+0.1140*b);
         //int brightness = r+g+b;
         //if (brightness < 64)
-        if (brightness < threshold*3)
+        if (brightness < threshold)
         {
             pixels[i] = 0;
             pixels[i+1] = 0;
@@ -142,15 +142,14 @@ int main(int argc, char *argv[]) {
     pixel_data_bin = (byte*) malloc(width * height);
     int64_t j = 0;
     int64_t i = 0;
-    while (i < width*height*bytesPerPixel){
-        pixel_data_bin[j] = pixels[i] 
+    while (i < (uint64_t) width*height*bytesPerPixel){
+        pixel_data_bin[j] = pixels[i];
         i+=bytesPerPixel;
         j++;
     }
     //теперь в pixel_data_bin хранятся последовательно пиксели (из правого нижнего угла в левый верхний (sic!))
     //его можно использовать дальше или записать в любой файл ("wb")
-    
-    free(pixel_data_bin);
 
+    free(pixel_data_bin);
     free(pixels);
 }

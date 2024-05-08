@@ -30,7 +30,7 @@ void ReadImage(const char *fileName, byte **pixels, uint32_t *width, uint32_t *h
         paddedRowSize++;
     }
 
-    uint64_t totalSize = (*width)*(*height)*(*bytesPerPixel);
+    uint64_t totalSize = (uint64_t) (*width)*(*height)*(*bytesPerPixel);
 
     *pixels = (byte*)malloc(totalSize);
     if (*pixels == NULL) {
@@ -47,6 +47,7 @@ void ReadImage(const char *fileName, byte **pixels, uint32_t *width, uint32_t *h
         currentRowPointer -= unpaddedRowSize;
     }
     fclose(imageFile);
+    //free(pixels);
 }
 
 void WriteImage(const char *fileName, byte *pixels, uint32_t width, uint32_t height, uint32_t bytesPerPixel) {

@@ -33,17 +33,17 @@ int main(int argc, char* argv[]) {
         //central pixel
         chunk[0] = pixels[i];
         //on the L and R sides
-        chunk[1] = (border.widthBorder != Left) ? pixels[i - bytesPerPixel] : 0;
-        chunk[2] = (border.widthBorder != Right) ? pixels[i + bytesPerPixel] : 0;
+        chunk[1] = (border.widthBorderDistance != -1) ? pixels[i - bytesPerPixel] : 0;
+        chunk[2] = (border.widthBorderDistance != 1) ? pixels[i + bytesPerPixel] : 0;
         //on the U and D sides
-        chunk[3] = (border.heightBorder != Dwn) ? pixels[i + bytesPerPixel * width] : 0;
-        chunk[4] = (border.heightBorder != Up) ? pixels[i - bytesPerPixel * width] : 0;
+        chunk[3] = (border.heightBorderDistance != -1) ? pixels[i + bytesPerPixel * width] : 0;
+        chunk[4] = (border.heightBorderDistance != 1) ? pixels[i - bytesPerPixel * width] : 0;
         //upper corners
-        chunk[5] = ((border.heightBorder != Up) && (border.widthBorder != Right)) ? pixels[i - bytesPerPixel * width + bytesPerPixel] : 0;
-        chunk[6] = ((border.heightBorder != Up) && (border.widthBorder != Left)) ? pixels[i - bytesPerPixel * width - bytesPerPixel] : 0;
+        chunk[5] = ((border.heightBorderDistance != 1) && (border.widthBorderDistance != 1)) ? pixels[i - bytesPerPixel * width + bytesPerPixel] : 0;
+        chunk[6] = ((border.heightBorderDistance != 1) && (border.widthBorderDistance != -1)) ? pixels[i - bytesPerPixel * width - bytesPerPixel] : 0;
         //bottom corners
-        chunk[7] = ((border.heightBorder != Dwn) && (border.widthBorder != Right)) ? pixels[i + bytesPerPixel * width + bytesPerPixel] : 0;
-        chunk[8] = ((border.heightBorder != Dwn) && (border.widthBorder != Left)) ? pixels[i + bytesPerPixel * width - bytesPerPixel] : 0;
+        chunk[7] = ((border.heightBorderDistance != -1) && (border.widthBorderDistance != 1)) ? pixels[i + bytesPerPixel * width + bytesPerPixel] : 0;
+        chunk[8] = ((border.heightBorderDistance != -1) && (border.widthBorderDistance != -1)) ? pixels[i + bytesPerPixel * width - bytesPerPixel] : 0;
 
         std::sort(chunk, chunk + 9); //std::sort gets 2 addresses of the piece of memory to be sorted - beginning and the end.
 
@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
     int64_t j = 0;
     int64_t i = 0;
     while (i < width*height*bytesPerPixel){
-        pixel_data_bin[j] = pixels_filtered[i] 
+        pixel_data_bin[j] = pixels_filtered[i];
         i+=bytesPerPixel;
         j++;
     }
