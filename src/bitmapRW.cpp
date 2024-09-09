@@ -4,7 +4,7 @@
 
 #include "../include/bitmapRW.h"
 
-void ReadImage(const char *fileName, byte **pixels, uint32_t *width, uint32_t *height, uint32_t *bytesPerPixel) {
+void ReadImage(const char *fileName, byte **pixels, int32_t *width, int32_t *height, uint32_t *bytesPerPixel) {
     FILE *imageFile = fopen(fileName, "rb");
 
     uint32_t dataOffset;
@@ -13,11 +13,11 @@ void ReadImage(const char *fileName, byte **pixels, uint32_t *width, uint32_t *h
 
     fseek(imageFile, OFFSET_WIDTH, SEEK_SET);
     fread(width, 4, 1, imageFile);
-    //*width = abs(*width);
+    *width = (*width < 0) ? (-1*(*width)) : (*width);
 
     fseek(imageFile, OFFSET_HEIGHT, SEEK_SET);
     fread(height, 4, 1, imageFile);
-    //*height = abs(*height);
+    *height = (*height < 0) ? (-1*(*height)) : (*height);
 
     uint16_t bitsPerPixel;
     fseek(imageFile, OFFSET_BITS_PER_PIXEL, SEEK_SET);
@@ -31,10 +31,13 @@ void ReadImage(const char *fileName, byte **pixels, uint32_t *width, uint32_t *h
     }
 
     uint64_t totalSize = (uint64_t) (*width)*(*height)*(*bytesPerPixel);
+    printf("%d\n", totalSize);
+    printf("%d\n", height);
+    printf("%d\n", width);
 
     *pixels = (byte*)malloc(totalSize);
     if (*pixels == NULL) {
-        printf("Memory allocation failed.\n");
+        perror("Memory allocation failed.\n");
         exit(1);
     }
 
@@ -50,7 +53,7 @@ void ReadImage(const char *fileName, byte **pixels, uint32_t *width, uint32_t *h
     //free(pixels);
 }
 
-void WriteImage(const char *fileName, byte *pixels, uint32_t width, uint32_t height, uint32_t bytesPerPixel) {
+void WriteImage(const char *fileName, byte *pixels, int32_t width, int32_t height, uint32_t bytesPerPixel) {
     FILE *outputFile = fopen(fileName, "wb");
     fseek(outputFile, OFFSET_SIGNATURE, 0);
     const char *BM = "BM";
