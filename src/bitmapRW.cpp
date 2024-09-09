@@ -31,9 +31,6 @@ void ReadImage(const char *fileName, byte **pixels, int32_t *width, int32_t *hei
     }
 
     uint64_t totalSize = (uint64_t) (*width)*(*height)*(*bytesPerPixel);
-    printf("%d\n", totalSize);
-    printf("%d\n", height);
-    printf("%d\n", width);
 
     *pixels = (byte*)malloc(totalSize);
     if (*pixels == NULL) {
